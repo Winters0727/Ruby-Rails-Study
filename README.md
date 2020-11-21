@@ -1,10 +1,21 @@
 # 면접을 위한 Ruby & Ruby on Rails 공부 기록
 
+- 11월 20일 : Ruby, Ruby on Rails 기본 마크다운 생성, Ruby 공부
+- 11월 21일 : Ruby on Rails를 이용한 CRU 기능 공부
+- 11월 22일 : 
+- 11월 23일 :
+- 11월 24일 : 
+- 11월 25일 : 
+- 11월 26일 :  
+
+
+
 ## 루비
 
 ### 마크다운
 
 - [Ruby from FreeCodeCamp](Ruby.md) / 출처 : https://www.youtube.com/watch?v=t_ispmWmdjY
+- [Ruby-style-guide](https://github.com/dalzony/ruby-style-guide/blob/master/README-koKR.md)
 
 
 
@@ -39,4 +50,8 @@
 ### 마크다운
 
 - [Ruby on Rails Tutorial](Ruby on Rails.md) / 출처 : https://guides.rubyonrails.org/getting_started.html#creating-a-new-rails-project
+- [Ruby on Rails - API](Ruby on Rails - API.md) / 출처 : https://guides.rubyonrails.org/api_app.html
+- [Ruby on Rails - Route](Ruby on Rails - Route.md) / 출처 : https://guides.rubyonrails.org/routing.html
 - [Ruby on Rails from FreeCodeCamp](Ruby on Rails - full course.md) / 출처 : https://www.youtube.com/watch?v=fmyvWz5TUWg
+- [Ruby on Rails-style-guide](https://github.com/pureugong/rails-style-guide/blob/master/README-koKR.md#activerecord)
+

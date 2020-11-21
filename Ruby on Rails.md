@@ -294,11 +294,11 @@ ArticlesController#new은 요청 포맷(text/html)에 대한 템플릿이 존재
 
 `url` 옵션의 값을 `articles_path`로 설정했다. 이는 앞에서 `config/route.rb`에 article에 대한 자원을 정의했었는데, 이 과정에서 articles에 대한 CRUD 라우트가 생성되었기 때문이다. 이는 앞에서 `rails routes` 라는 명령어로 확인했었다.
 
-`articles_path` 헬퍼는 `articles` 접두사가 붙은 URI 패턴 중에 적절한 폼을 레일즈에게 알려준다. 그리고 폼은 자동으로 해당 라우트로 `POST` 요청을 보내게 된다. 이는 현 컨트롤러인 ArticlesController의 `create` 동작과 관련이 있다.
+`articles_path` 헬퍼는 `articles` 접두사가 붙은 URI 패턴 중에 적절한 폼을 레일즈에게 알려준다. 그리고 폼은 자동으로 해당 라우트로 `POST` 요청을 보내게 된다. 이는 현 컨트롤러인 `ArticlesController`의 `create` 동작과 관련이 있다.
 
 폼과 관련된 라우트가 정의되었으니 폼을 작성하여 제출함으로써 새로운 article를 생성할 수 있게 되었다. 하지만, 폼을 제출하면 Unknow action 에러가 발생하게 된다.
 
-이는 ArticlesController에 `create` 동작이 정의되어 있지 않기 때문이다. 앞에서 했던 것처럼 컨트롤러에 동작을 정의해주자.
+이는 `ArticlesController`에 `create` 동작이 정의되어 있지 않기 때문이다. 앞에서 했던 것처럼 컨트롤러에 동작을 정의해주자.
 
 ```ruby
 class ArticlesController < ApplicationController
@@ -388,7 +388,7 @@ $ rails db:migrate RAILS_ENV=production
 
 #### 컨트롤러를 통한 데이터 저장
 
-다시 ArticlesController로 돌아가서 `create` 동작에 새로운 `Article` 모델 객체를 만들어 데이터베이스에 저장해보자.
+다시 `ArticlesController`로 돌아가서 `create` 동작에 새로운 `Article` 모델 객체를 만들어 데이터베이스에 저장해보자.
 
 ```ruby
 def create
@@ -403,3 +403,318 @@ end
 
 이제 Article 객체를 생성해보자. 제출 버튼을 누르면 ActiveModel::ForbiddenAttributesError가 발생한다.
 
+레일즈는 애플리케이션을 안전하게 사용하기 위한 다양한 보안을 지원한다. 그리고 지금 만난 것이 그 중 하나인 `strong parameters`로, 컨트롤러의 동작에 사용되는 파라미터들은 정확히 정의해줘야한다는 것이다.
+
+만약, 모든 컨트롤러에서 해당 파라미터로 하나의 모델에 접근할 수 있다면 꽤나 편리할 것이다. 하지만, 이러한 편리함 때문에 기능을 오용할 수도 있기 때문에 위험하다.
+
+이런 일을 방지하기 위해서 레일즈에서는 `strong parameters`가 정의되어 있는데, 이 경우에는 `title`과 `text` 파라미터를 `create`에 확실하게 정의해줘야한다. 이를 위해서 다음과 같이 `require`와 `permit`을 사용해보자.
+
+```ruby
+@article = Article.new(params.require(:article).permit(:title, :text))
+```
+
+이 때, 파라미터들은 `create` 뿐만 아니라 `update`에서도 사용할 수 있으므로 다음과 같이 객체로서 저장해둔다면 다른 동작들에 대해서도 동일하게 사용할 수 있을 것이다. 단, 이 경우에는 `private`를 선언하여 외부에서 안의 값들을 불러올 수 없게 만들어야한다.
+
+```ruby
+private
+  def article_params
+    params.require(:article).permit(:title, :text)
+  end
+
+def create
+  @article = Article.new(article_params)
+  
+  @article.save
+  redirect_to @article
+end
+```
+
+
+
+#### Article 보여주기
+
+이제 제출 버튼을 눌러보면 레일즈는 `show`가 정의되지 않았다고 불평할 것이다. `rails routes`를 보면 `show`는 다음과 같이 정의되어 있다.
+
+```
+article GET /articles/:id(.:format) article#show
+```
+
+다시 컨트롤러 파일로 돌아가서 `show` 동작을 정의해보자.
+
+```
+컨트롤러에서 자주 사용되는 CRUD 동작 명령어는 다음과 같이 정의합니다.
+index, show, new, edit, create, update, destory (public methods)
+자신만의 동작 명령어를 사용해도 좋지만, 그 경우에는 컨트롤러 내에서 private로 선언해야합니다.
+```
+
+```ruby
+class ArticlesController < ApplicationController
+  def show
+    @article = Article.find(params[:id])
+  end
+  
+  def new
+  end
+```
+
+`Article.find`는 입력된 파라미터 값으로 데이터를 찾으며, 이 떄 데이터를 인스턴스 변수(`@article`)에 저장했다. 여기서 정의한 인스턴스 변수는 뷰에 전달되므로 뷰 파일(`app/views/articles/show.html.erb`)을 다음과 같이 작성한다.
+
+```erb
+<p>
+  <strong>Title:</strong>
+  <%= @article.title %>
+</p>
+ 
+<p>
+  <strong>Text:</strong>
+  <%= @article.text %>
+</p>
+```
+
+
+
+#### 리스트
+
+`rails routes`에서 `index`는 다음과 같이 정의되어 있다.
+
+```
+articles GET /articles(.:format) articles#index
+```
+
+`ArticlesController`에 `index` 동작을 정의하자.
+
+```ruby
+class ArticlesController < ApplicationController
+  def index
+    @articles = Article.all
+  end
+```
+
+마지막으로 `index`의 뷰에 Article 리스트를 작성한다.
+
+```erb
+<h1>Listing Articles</h1>
+ 
+<table>
+  <tr>
+    <th>Title</th>
+    <th>Text</th>
+    <th></th>
+  </tr>
+ 
+  <% @articles.each do |article| %>
+    <tr>
+      <td><%= article.title %></td>
+      <td><%= article.text %></td>
+      <td><%= link_to 'Show', article_path(article) %></td>
+    </tr>
+  <% end %>
+</table>
+```
+
+
+
+#### 링크 걸기
+
+이제 `create`와 `show`에 익숙해졌으니 링크를 걸어보자. `app/views/welcome/index.html.erb`를 다음과 같이 변경해보자.
+
+```erb
+<h1>Hello, Rails!</h1>
+<%= link_to 'My Blog', controller: 'articles' %>
+<%= link_to 'New Article', new_article_path %>
+```
+
+`link_to`는 레일즈의 내장 뷰 헬퍼 메서드로 하이퍼링크를 걸어준다.
+
+```erb
+<%= form_with scope: :article, url: articles_path, local: true do |form| %>
+  ...
+<% end %>
+ 
+<%= link_to 'Back', articles_path %>
+```
+
+```erb
+<p>
+  <strong>Title:</strong>
+  <%= @article.title %>
+</p>
+ 
+<p>
+  <strong>Text:</strong>
+  <%= @article.text %>
+</p>
+ 
+<%= link_to 'Back', articles_path %>
+```
+
+```
+만약 같은 컨트롤러 내에서 이동한다면 :controller 설정을 추가할 필요가 없다. 레일즈는 현재 사용중인 컨트롤러를 기본값으로 사용하기 때문이다.
+```
+
+
+
+#### 제약 추가
+
+Article 모델 파일을 살펴보자.
+
+```ruby
+class Article < ApplicationRecord
+end
+```
+
+이 파일에 작성된 것은 없지만, Article 모델이 ApplicationRecord를 상속받는다는 사실을 잊지말자. 또한, ApplicationRecord는 CRUD를 포함한 다양한 기능을 제공하는 `ActiveRecord::Base`를 상속받는다.
+
+레일즈는 데이터를 제약하여 모델로 보내주는 메서드를 제공한다. `app/models/article.rb` 파일을 작성해보자.
+
+```ruby
+class Article < ApplicationRecord
+  validates :title, presence: true
+                    length: { minimum: 5}
+end
+```
+
+위 코드에서 제약 대상은 `title`이며, 길이를 최소 5개 이상 입력할 것을 조건으로 걸었다. 레일즈는 모델에 대해 다양한 제약사항을 걸 수 있는데 관련 내용은 `Active Record Validation` 문서를 참고하자.
+
+제약사항을 걸었으므로 `@article.save`가 실행될 때 제약조건을 만족하지 못하는 인스턴스에 대해서는 `false`를 반환한다. 제약사항이 정확히 동작하는지 확인하기 위해 `create` 동작 코드를 다음과 같이 변경해보자.
+
+```ruby
+def create
+  @article = Article.new(article_params)
+ 
+  if @article.save
+    redirect_to @article
+  else
+    render 'new'
+  end
+end
+ 
+private
+  def article_params
+    params.require(:article).permit(:title, :text)
+  end
+```
+
+`@article.save`가 제약사항에 따라 진리값(true/false)을 반환하므로 조건문에 사용이 가능하다. 이제 제약조건을 만족하면 해당 Article로 이동하게되고, 만족하지 못했을 경우 `articles/new`의 뷰에 해당하는 `app/views/new.html.erb` 템플릿 파일이 렌더링된다.
+
+```erb
+<%= form_with scope: :article, url: articles_path, local: true do |form| %>
+ 
+  <% if @article.errors.any? %>
+    <div id="error_explanation">
+      <h2>
+        <%= pluralize(@article.errors.count, "error") %> prohibited
+        this article from being saved:
+      </h2>
+      <ul>
+        <% @article.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+ 
+  <p>
+    <%= form.label :title %><br>
+    <%= form.text_field :title %>
+  </p>
+ 
+  <p>
+    <%= form.label :text %><br>
+    <%= form.text_area :text %>
+  </p>
+ 
+  <p>
+    <%= form.submit %>
+  </p>
+ 
+<% end %>
+ 
+<%= link_to 'Back', articles_path %>
+```
+
+`@articles.errors.any?` 메서드는 에러가 발생했는지 체크한다. 그리고 에러가 발생했을 경우에는 `@article.errors.full_message`로 에러 메세지 리스트를 출력한다.
+
+`pluralize`는 레일즈의 헬퍼로 인자의 개수가 1개 이상이라면 이를 복수화해준다.
+
+```ruby
+def new
+  @article = Article.new
+end
+```
+
+이제 `new` 동작에 `@article = Article.new`를 추가해준다. 이를 정의해주지 않으면 `@article`은 `nil`을 가지게 되며, 이는 `@article.errors.any?`를 통해 에러를 반환한다.
+
+
+
+#### 업데이트
+
+CRUD 중에서 CR 기능을 구현하였으니 나머지 UD 기능을 구현해보자.
+
+먼저 U에 해당하는 Update 기능이다. Update 기능을 구현하기에 앞서 Controller의 `edit` 동작을 작성하자.
+
+```ruby
+def edit
+  @article = Article.find(params[:id])
+end
+```
+
+```erb
+<h1>Edit Article</h1>
+ 
+<%= form_with(model: @article, local: true) do |form| %>
+ 
+  <% if @article.errors.any? %>
+    <div id="error_explanation">
+      <h2>
+        <%= pluralize(@article.errors.count, "error") %> prohibited
+        this article from being saved:
+      </h2>
+      <ul>
+        <% @article.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+ 
+  <p>
+    <%= form.label :title %><br>
+    <%= form.text_field :title %>
+  </p>
+ 
+  <p>
+    <%= form.label :text %><br>
+    <%= form.text_area :text %>
+  </p>
+ 
+  <p>
+    <%= form.submit %>
+  </p>
+ 
+<% end %>
+ 
+<%= link_to 'Back', articles_path %>
+```
+
+이제 `edit` 페이지가 완성됐으니 `update` 동작을 정의해주자. `form_with` 메서드에 Article 객체를 보내면 레일즈는 자동으로 변경된 Article을 보내기위한 URL을 설정해준다. 이 옵션은 레일즈에게 HTTP 메서드 중 `PATCH`로 자원의 업데이트를 위한 REST protocol에 해당한다.
+
+또한, `form_with` 메서드에 모델 객체를 `model: @article`로 전달해주었는데, 전달된 모델의 인스턴스 내에 있는 데이터들을 상응하는 객체에 전달하도록 폼 헬퍼를 도와주는 역할을 한다.
+
+이는 앞에서 `create`에서 사용한 `scope: :article`에서 Article 모델에 해당하는 빈 폼 객체를 생성해주는 역할과는 다르다.
+
+이제 `update` 동작을 `ArticlesController`에 추가해보자.
+
+```ruby
+def update
+  @article = Article.find(params[:id])
+ 
+  if @article.update(article_params)
+    redirect_to @article
+  else
+    render 'edit'
+  end
+end
+```
+
+`update` 메서드는 이미 존재하는 인스턴스 객체의 값을 업데이트해줄 떄 사용한다. 파라미터로는 `create`에서 사용한 article_params를 사용한다. 만약 파라미터의 값을 직접 지정해주었다면(`@article.update(title: 'A new title')`) 지정해 준 파라미터의 값만 변경되고 나머지 값은 그대로 유지된다.
