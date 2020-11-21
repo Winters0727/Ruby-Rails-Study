@@ -8,5 +8,5 @@
 
 ## 루비 온 레일즈
 
-- [Ruby on Rails Tutorial](Ruby on Rails.md) 출처 : https://guides.rubyonrails.org/getting_started.html#creating-a-new-rails-project
+- [Ruby on Rails Tutorial](Ruby on Rails.md) / 출처 : https://guides.rubyonrails.org/getting_started.html#creating-a-new-rails-project
 - [Ruby on Rails from FreeCodeCamp](Ruby on Rails - full course.md) / 출처 : https://www.youtube.com/watch?v=fmyvWz5TUWg
