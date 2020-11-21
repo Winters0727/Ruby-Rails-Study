@@ -54,7 +54,7 @@ $ ruby bin/rails server
 
 **뷰**의 목적은 동작으로 취합된 정보를 사용자가 읽을 수 있는 정보로 보여주는 것이다. 여기서 주의할 점은 정보를 취합하는 역할은 **컨트롤러**지 뷰가 아니다. 뷰는 단지 전달된 정보를 보여주는 역할만을 담당한다. 기본적으로 뷰 템플릿들은 eRuby(Embedded Ruby)라는 언어로 작성되는데, eRuby는 응답이 사용자에게 보내지기 전에 레일즈 내의 요청-응답 사이클을 진행시키는 템플릿 엔진이다.
 
-![MVC](Rails Picture/MVC.jpeg)
+![MVC](./Rails Picture/MVC.jpeg)
 
 레일즈의 MVC 패턴을 그림으로 나타낸 것이다. 위 그림은 다음과 같은 프로세스를 가진다.
 
@@ -66,7 +66,7 @@ $ ruby bin/rails server
 6. 뷰는 eRuby(embedded Ruby) 언어를 통해 "/users" URL에 해당하는 템플릿(html) 페이지를 렌더링하여 컨트롤러에 넘겨준다.
 7. 컨트롤러는 뷰에서 전달받은 HTML파일을 사용자 브라우저로 보낸다.
 
-![ruby MVC example (1)](Rails Picture/ruby MVC example (1).png)
+![ruby MVC example (1)](./Rails Picture/ruby MVC example (1).png)
 
 출처 : https://medium.com/@matthewmain/rails-request-response-cycle-819e9cd8fa4e
 
