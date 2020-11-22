@@ -49,9 +49,9 @@
 
 ### 마크다운
 
-- [Ruby on Rails Tutorial](./Ruby on Rails.md) / 출처 : https://guides.rubyonrails.org/getting_started.html#creating-a-new-rails-project
-- [Ruby on Rails - API](./Ruby on Rails - API.md) / 출처 : https://guides.rubyonrails.org/api_app.html
-- [Ruby on Rails - Route](./Ruby on Rails - Route.md) / 출처 : https://guides.rubyonrails.org/routing.html
-- [Ruby on Rails from FreeCodeCamp](./Ruby on Rails - full course.md) / 출처 : https://www.youtube.com/watch?v=fmyvWz5TUWg
+- [Ruby on Rails Tutorial](./RubyonRails.md) / 출처 : https://guides.rubyonrails.org/getting_started.html#creating-a-new-rails-project
+- [Ruby on Rails - API](./RubyonRails-API.md) / 출처 : https://guides.rubyonrails.org/api_app.html
+- [Ruby on Rails - Route](./RubyonRails-Route.md) / 출처 : https://guides.rubyonrails.org/routing.html
+- [Ruby on Rails from FreeCodeCamp](./RubyonRails-fullcourse.md) / 출처 : https://www.youtube.com/watch?v=fmyvWz5TUWg
 - [Ruby on Rails-style-guide](https://github.com/pureugong/rails-style-guide/blob/master/README-koKR.md#activerecord)
 

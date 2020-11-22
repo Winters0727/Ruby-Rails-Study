@@ -66,7 +66,7 @@ $ ruby bin/rails server
 6. 뷰는 eRuby(embedded Ruby) 언어를 통해 "/users" URL에 해당하는 템플릿(html) 페이지를 렌더링하여 컨트롤러에 넘겨준다.
 7. 컨트롤러는 뷰에서 전달받은 HTML파일을 사용자 브라우저로 보낸다.
 
-![ruby MVC example (1)](./Rails Picture/ruby MVC example (1).png)
+![ruby MVC example (1)](./Rails Picture/ruby-MVC-example-(1).png)
 
 출처 : https://medium.com/@matthewmain/rails-request-response-cycle-819e9cd8fa4e
 
