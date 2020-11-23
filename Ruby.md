@@ -173,5 +173,183 @@ end
 ### for
 
 ```ruby
-
+for element in iterator
+    # task...
+end
 ```
+
+```ruby
+iterator.each do |element|
+  # task...
+end
+```
+
+```ruby
+for i in 0..10 # 1~10
+  puts i
+end
+
+11.each do |i| # 1~10
+  puts i
+end
+
+for i in 0...10 # 1~9
+  puts i
+end
+```
+
+
+
+## 주석
+
+### Comment
+
+```ruby
+# one line
+
+=begin
+
+multiple line
+
+=end
+```
+
+
+
+## 파일
+
+### Read files
+
+```ruby
+File.open("textfile.txt", "r") do |file|
+ puts file.read()
+ puts file.read().include? "text"
+ puts file.readline()
+end
+
+File.open("textfile.txt", "r") do |file|
+ for line in file.readlines()
+   puts line
+end
+    
+file = File.open("textfile.txt", "r")
+  puts file.read()
+file.close()
+```
+
+
+
+### Write files
+
+```ruby
+File.open("textfile.txt", "a") do |file| # w : overwritten
+ file.write("\n Hi, my name is Mr.Park")
+end
+    
+file = File.open("textfile.txt", "w")
+  file.write("Something")
+file.close()
+```
+
+
+
+## 에러처리
+
+```ruby
+begin # try task...
+    
+rescue # when error is occured...
+    
+end
+```
+
+
+
+## 클래스
+
+```ruby
+class Person
+  attr_accessor :name, :sex, :age
+end
+
+winters = Person.new()
+winters.name = "winters"
+winters.sex = "male"
+winters.age = 28
+
+puts winters.name
+```
+
+```ruby
+class Person
+  attr_accessor :name, :sex, :age
+  def initialize(name, sex, age)
+    @name = name
+    @sex = sex
+    @age = age
+  end
+    
+  def show_your_name
+    puts @name
+  end
+end
+
+winters = Person.new("winters", "male", 28)
+winters.show_your_name
+```
+
+
+
+## 상속
+
+```ruby
+class Person
+    attr_accessor :name, :sex, :age
+    def initialize(name, sex, age)
+      @name = name
+      @sex = sex
+      @age = age
+    end
+      
+    def show_your_name
+      puts @name
+    end
+  end
+  
+  class Student < Person # Student 클래스는 Person 클래스를 상속
+    def show_your_name # Method Override
+      puts "My name is #{@name} and my age is #{@age}"
+    end
+  end
+  
+  winters = Student.new("winters", "male", 28)
+  winters.show_your_name
+```
+
+
+
+## 모듈
+
+```ruby
+module Tools
+  def sayhi(name)
+    puts "Hello, #{name}"
+  end
+  def saybye(name)
+    puts "Good bye, #{name}"
+  end
+end
+
+include Tools
+
+Tools.saybye("winters")
+```
+
+```ruby
+# require "파일명"
+require_relative "test_module.rb" # require_relative : 상대경로
+include Tools
+
+Tools.sayhi("winters")
+```
+
